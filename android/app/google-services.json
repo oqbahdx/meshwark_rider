@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1057360320432",
+    "project_id": "meshwark-a5bee",
+    "storage_bucket": "meshwark-a5bee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057360320432:android:eacb9188efa82975aba875",
+        "android_client_info": {
+          "package_name": "com.meshwark.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_QufK9vNFcG_xunQTyBb70cIFvbuHaGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057360320432:android:801691a523b515fcaba875",
+        "android_client_info": {
+          "package_name": "com.meshwark.rider"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_QufK9vNFcG_xunQTyBb70cIFvbuHaGo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

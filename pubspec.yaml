@@ -1,0 +1,220 @@
+name: meshwark_rider
+description: meshwark rider project.
+
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.3 <3.0.0"
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.2
+  intro_views_flutter: ^3.2.0
+  lottie: ^2.2.0
+  flutter_svg: ^2.0.9
+  retrofit: ^4.1.0
+  analyzer: ^6.2.0
+  dio: ^5.4.0
+  json_serializable: ^6.1.4
+  dartz: ^0.10.1
+  internet_connection_checker: ^1.0.0+1
+  pretty_dio_logger: ^1.1.1
+  shared_preferences: ^2.0.13
+  freezed: ^2.0.4
+  get_it: ^7.2.0
+  json_annotation: ^4.5.0
+  fluttertoast: ^8.0.9
+  google_maps_flutter: ^2.5.3
+  geolocator: ^12.0.0
+  permission_handler: ^11.2.1
+  pin_code_fields: ^8.0.1
+  material_floating_search_bar_2: ^0.5.0
+  timelines: ^0.1.0
+  introduction_screen: ^3.0.2
+  flutter_launcher_icons: ^0.13.1
+  flutter_bloc: ^8.0.1
+  font_awesome_flutter: ^10.1.0
+  rxdart: ^0.27.5
+  easy_localization: ^3.0.7
+  flutter_phoenix: ^1.0.0
+  url_launcher: ^6.1.5
+  overlay_support: ^2.0.1
+  package_info_plus: ^8.0.2
+  image_picker: ^1.0.7
+#  firebase_auth: ^4.17.4
+  http: ^0.13.5
+  custom_info_window: ^1.0.1
+  # flutter_polyline_points: ^2.0.0
+#  firebase_storage: ^11.6.5
+#  cloud_firestore: ^4.15.4
+  mockito: ^5.3.2
+  flutter_local_notifications: ^17.2.2
+  timezone: ^0.9.0
+  flutter_credit_card: ^4.0.1
+  device_info_plus: ^10.1.2
+  flutter_rating_bar: ^4.0.1
+#  modal_bottom_sheet: ^2.1.2
+#  device_preview: ^1.1.0
+  connectivity_plus: ^6.0.4
+#  connectivity_plus: ^3.0.2
+  auto_animated: ^3.1.0
+  flutter_screenutil: ^5.9.0
+  flutter_native_splash: ^2.3.10
+  cached_network_image: ^3.3.1
+  signalr_netcore: ^1.3.4
+  firebase_crashlytics: ^4.1.0
+  firebase_analytics: ^11.3.0
+  firebase_core: ^3.4.0
+  firebase_messaging: ^15.1.0
+  u_credit_card: ^1.3.1
+  pay: ^2.0.0
+  unicode_moyasar: ^1.0.3
+  shimmer: ^3.0.0
+  collection: ^1.18.0
+  google_maps_cluster_manager: ^3.1.0
+  vibration: ^2.0.0
+  audioplayers: ^6.0.0
+  logging: ^1.2.0
+  talker: ^4.6.10
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  retrofit_generator: ^8.1.0
+  build_runner: ^2.1.7
+  flutter_lints: ^4.0.0
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/appLogo.png"
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^2.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/icons/
+    - assets/images/man.svg
+    - assets/images/man.png
+    - assets/images/woman.png
+    - assets/images/woman.svg
+    - assets/images/car.png
+    - assets/images/truck.png
+    - assets/images/bigTruck.png
+    - assets/images/car_marker.png
+    - assets/images/van.png
+    - assets/images/background.png
+    - assets/images/splashLogo.png
+    - assets/images/appLogo.png
+    - assets/images/photo.png
+    - assets/images/bell.svg
+    - assets/images/history.svg
+    - assets/images/loadingGif.gif
+    - assets/images/location.svg
+    - assets/images/language.svg
+    - assets/images/Profile.svg
+    - assets/images/support.svg
+    - assets/images/message.svg
+    - assets/images/about.svg
+    - assets/images/arrow.svg
+    - assets/images/greenArrow.svg
+    - assets/images/myCar.png
+    - assets/images/pin.png
+    - assets/images/marker_car.png
+    - assets/jsons/lookingForCar.json
+    - assets/jsons/van.json
+    - assets/jsons/truck.json
+    - assets/jsons/success.json
+    - assets/jsons/loading.json
+    - assets/jsons/error.json
+    - assets/jsons/noInternet.json
+    - assets/jsons/profile.json
+    - assets/jsons/history.json
+    - assets/jsons/notification.json
+    - assets/jsons/mapLoading.json
+    - assets/map/map_style.txt
+    - assets/map/map_style_dark.txt
+    - assets/map/map_style_pink.txt
+    - assets/translation/ar-SA.json
+    - assets/translation/en-US.json
+    - assets/icons/appLogoSplash.png
+    - assets/images/car_select.png
+    - assets/images/van_select.png
+    - assets/images/truck_select.png
+    - assets/images/truck2_select.png
+    - assets/ca/lets-encrypt-r3.pem
+    - assets/sounds/requestAlert.wav
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: "assets/icons/appLogoSplash.png"
+  android_12:
+    color: "#ffffff"
+    image: "assets/icons/splash.png"

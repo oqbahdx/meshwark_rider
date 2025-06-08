@@ -1,0 +1,120 @@
+import 'package:bloc/bloc.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../app/app_pref.dart';
+import '../../../app/constants.dart';
+import '../../../app/di.dart';
+import '../../../data/network/dio_helper.dart';
+import '../../../domain/login_model.dart';
+import '../../../domain/model/login_response_model.dart';
+import '../../resources/Strings_manager.dart';
+import '../../resources/color_manager.dart';
+import '../../resources/style_manager.dart';
+import '../../resources/value_manager.dart';
+
+part 'login_state.dart';
+
+class LoginCubit extends Cubit<LoginState> {
+  LoginCubit() : super(LoginInitial());
+  final AppPreferences _appPreferences = instance<AppPreferences>();
+  FToast fToast = FToast();
+  showErrorMessage({required String message, required BuildContext context}) {
+    fToast.init(context);
+    Widget toast = Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.redAccent,
+      ),
+      child: Text(
+        message,
+        style:
+            TextStyle(color: ColorManager.white, fontWeight: FontWeight.bold),
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 2),
+    );
+  }
+
+  bool isSecure = true;
+  changePasswordVisible() {
+    isSecure = !isSecure;
+    emit(ChangePasswordVisibleState());
+  }
+
+  showNoInternetMessage() {
+    Widget toast = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSize.s10),
+        color: ColorManager.textFormDarkGrey,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.wifi),
+          const SizedBox(
+            width: 12.0,
+          ),
+          Text(
+            AppStrings.noInternetConnection.tr(),
+            style: getBoldStyle(color: ColorManager.black),
+          ),
+        ],
+      ),
+    );
+
+    fToast.showToast(
+      child: toast,
+      gravity: ToastGravity.BOTTOM,
+      toastDuration: const Duration(seconds: 4),
+    );
+  }
+
+  LoginModel? loginModel; 
+  LoginResponseModel? loginResponseModel;
+
+  void login({required String phone, required String password}) async {
+    final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult.contains(ConnectivityResult.mobile) ||
+        connectivityResult.contains(ConnectivityResult.wifi)) {
+      emit(LoginLoadingState());
+      DioHelper.postData(endPoint: Constants.loginEndPoint, data: {
+        "phoneNumber": phone,
+        "password": password,
+      }).then((value) {
+        loginModel = LoginModel.fromJson(value?.data);
+        _appPreferences.setToken(key: "token", value: loginModel?.data?.token ?? "");
+        _appPreferences.getToken(key: "token").then((value) {
+          Constants.token = value!;
+        });
+        print("token from login cubit ${Constants.token}");
+        _appPreferences.setUserId(key: "userId", value: loginModel?.data?.id ?? "");
+        _appPreferences.getUserId(key: "userId").then((value) {
+          Constants.id = value!;
+        });
+        emit(LoginSuccessState());
+        if (kDebugMode) {
+          print("id : ${loginModel?.data?.id}");
+          print("user id from constants : ${Constants.id}");
+        }
+      }).catchError((error) {
+        emit(LoginErrorState(error.toString()));
+        if (kDebugMode) {
+          print(error);
+        }
+      });
+    } else {
+      showNoInternetMessage();
+    }
+  }
+}

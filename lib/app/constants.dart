@@ -1,10 +1,10 @@
 class Constants {
-  // static const String baseUrl = "http://meshwark-001-site1.jtempurl.com/api/";
-  // static const String hubUrl = "http://meshwark-001-site1.jtempurl.com/";
-    static const String baseUrl = "https://192.168.1.109:5001/api/";
-     static const String hubUrl = "https://192.168.1.109:5001/";
-   // static const String baseUrl = "https://10.0.2.2:5001/api/";
-   // static const String hubUrl = "https://10.0.2.2:5001/";
+   static const String baseUrl = "http://meshwark-001-site1.jtempurl.com/api/";
+   static const String hubUrl = "http://meshwark-001-site1.jtempurl.com/";
+    // static const String baseUrl = "https://192.168.1.109:5001/api/";
+    //  static const String hubUrl = "https://192.168.1.109:5001/";
+  //  static const String baseUrl = "https://10.0.2.2:5001/api/";
+  //  static const String hubUrl = "https://10.0.2.2:5001/";
 
   static const String registerEndPoint = "/auth/register";
   static const String loginEndPoint = "/auth/login";

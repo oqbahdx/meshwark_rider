@@ -16,6 +16,7 @@ import 'package:meshwark_rider/presentation/resources/language_manager.dart';
 import 'app/app.dart';
 import 'app/di.dart';
 import 'data/network/dio_helper.dart';
+import 'app/secure_token_storage.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -29,7 +30,7 @@ class MyHttpOverrides extends HttpOverrides {
 void fetchDataAndUpdateConstants() async {
   final AppPreferences appPreferences = instance();
   Constants.id = await appPreferences.getUserId(key: 'userId') ?? "";
-  Constants.token = await appPreferences.getToken(key: 'token') ?? "";
+  Constants.token = await SecureTokenStorage.readToken() ?? "";
   Constants.isBoarding = await appPreferences.getBoarding(key: 'boarding') ?? 0;
   Constants.firstName =
       await appPreferences.getFirstName(key: 'firstName') ?? "";

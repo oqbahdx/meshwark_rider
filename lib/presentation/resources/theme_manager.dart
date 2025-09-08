@@ -15,10 +15,7 @@ ThemeData getApplicationLightTheme() {
     splashColor: ColorManager.lightPrimary,
     // ripple effect color
     // card view theme
-    cardTheme: CardTheme(
-        color: ColorManager.white,
-        shadowColor: ColorManager.grey,
-        elevation: AppSize.s4),
+
 
     // app bar theme
     appBarTheme: AppBarTheme(
@@ -104,10 +101,7 @@ ThemeData getApplicationDarkTheme() {
     scaffoldBackgroundColor: ColorManager.white,
     // ripple effect color
     // card view theme
-    cardTheme: CardTheme(
-        color: ColorManager.white,
-        shadowColor: ColorManager.grey,
-        elevation: AppSize.s4),
+
 
     // app bar theme
     appBarTheme: AppBarTheme(

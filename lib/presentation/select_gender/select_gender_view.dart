@@ -12,8 +12,6 @@ import 'package:meshwark_rider/presentation/resources/fonts_manager.dart';
 import 'package:meshwark_rider/presentation/resources/style_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../data/network/signalR_service.dart';
-
 class SelectGenderView extends StatefulWidget {
   final String tag;
   final String image;
@@ -32,7 +30,6 @@ class _SelectGenderViewState extends State<SelectGenderView>
   @override
   void initState() {
     super.initState();
-    //  context.read<SelectGenderCubit>().reset();
 
     _animationController = AnimationController(
       vsync: this,
@@ -59,8 +56,9 @@ class _SelectGenderViewState extends State<SelectGenderView>
           backgroundColor: ColorManager.white,
           appBar: AppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarBrightness: Brightness.light,
-                statusBarIconBrightness: Brightness.dark),
+              statusBarBrightness: Brightness.light,
+              statusBarIconBrightness: Brightness.dark,
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: Text(
@@ -78,12 +76,22 @@ class _SelectGenderViewState extends State<SelectGenderView>
                   Row(
                     children: [
                       Expanded(
-                          child: _buildGenderCard(cubit, AppStrings.woman,
-                              ImageAssets.woman, ColorManager.pink)),
+                        child: _buildGenderCard(
+                          cubit,
+                          AppStrings.woman,
+                          ImageAssets.woman,
+                          ColorManager.pink,
+                        ),
+                      ),
                       SizedBox(width: 20.w),
                       Expanded(
-                          child: _buildGenderCard(cubit, AppStrings.man,
-                              ImageAssets.man, ColorManager.primary)),
+                        child: _buildGenderCard(
+                          cubit,
+                          AppStrings.man,
+                          ImageAssets.man,
+                          ColorManager.primary,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 40.h),
@@ -91,8 +99,9 @@ class _SelectGenderViewState extends State<SelectGenderView>
                     opacity: _animation,
                     child: SlideTransition(
                       position: Tween<Offset>(
-                              begin: const Offset(0, 0.5), end: Offset.zero)
-                          .animate(_animation),
+                        begin: const Offset(0, 0.5),
+                        end: Offset.zero,
+                      ).animate(_animation),
                       child: Image.asset(
                         ImageAssets.carSelect,
                         height: 120.h,
@@ -121,10 +130,6 @@ class _SelectGenderViewState extends State<SelectGenderView>
         gender == AppStrings.woman
             ? cubit.setWomanActive()
             : cubit.setManActive();
-        // setState(() {
-        //   // cubit.image = imagePath;
-        //   // cubit.tag = gender;
-        // });
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
@@ -188,22 +193,24 @@ class _SelectGenderViewState extends State<SelectGenderView>
     );
   }
 
-  void _onNextPressed(SelectGenderCubit cubit) async {
-    if (await Permission.location.request().isGranted) {
-      if (mounted) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => MapPageView(
-              image: cubit.image,
-              tag: cubit.tag,
-              gender: cubit.gender,
-              typeOfTrip: 'cityToCity',
-            ),
+  Future<void> _onNextPressed(SelectGenderCubit cubit) async {
+    final status = await Permission.locationWhenInUse.request();
+
+    if (status.isGranted && mounted) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => MapPageView(
+            image: cubit.image,
+            tag: cubit.tag,
+            gender: cubit.gender,
+            typeOfTrip: 'cityToCity',
           ),
-        );
-      }
+        ),
+      );
     } else {
-      await Permission.location.request();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Location permission is required.")),
+      );
     }
   }
 }

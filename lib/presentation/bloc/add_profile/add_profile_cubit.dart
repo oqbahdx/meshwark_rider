@@ -37,7 +37,7 @@ class AddProfileCubit extends Cubit<AddProfileState> {
       emit(UploadImageState());
     }
     if (kDebugMode) {
-      print(image?.path.split('/').last);
+     
     }
     emit(UploadImageState());
   }

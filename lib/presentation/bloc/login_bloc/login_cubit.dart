@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../app/app_pref.dart';
 import '../../../app/constants.dart';
 import '../../../app/di.dart';
@@ -46,6 +46,15 @@ class LoginCubit extends Cubit<LoginState> {
     );
   }
 
+    Future<bool> hasInternetAccess() async {
+    try {
+      final result = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 3));
+      return result.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
+
   bool isSecure = true;
   changePasswordVisible() {
     isSecure = !isSecure;
@@ -85,9 +94,8 @@ class LoginCubit extends Cubit<LoginState> {
   LoginResponseModel? loginResponseModel;
 
   void login({required String phone, required String password}) async {
-    final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
+    final connected = await hasInternetAccess();
+    if (connected == true) {
       emit(LoginLoadingState());
       try {
         final value = await DioHelper.postData(endPoint: Constants.loginEndPoint, data: {
@@ -104,13 +112,12 @@ class LoginCubit extends Cubit<LoginState> {
         }
         emit(LoginSuccessState());
         if (kDebugMode) {
-          print("id : ${loginModel?.data?.id}");
-          print("user id from constants : ${Constants.id}");
+        
         }
       } catch (error) {
         emit(LoginErrorState(error.toString()));
         if (kDebugMode) {
-          print(error);
+        
         }
       }
     } else {

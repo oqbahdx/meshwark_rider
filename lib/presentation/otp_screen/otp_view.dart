@@ -97,13 +97,13 @@ class _OTPViewState extends State<OTPView> {
                       controller: _controller,
                       onCompleted: (code) {
                         if (kDebugMode) {
-                          print("Completed");
+                       
                         }
                         otpCode = code;
                       },
                       onChanged: (value) {
                         if (kDebugMode) {
-                          print(value);
+                        
                         }
                         setState(() {
                           // currentText = value;
@@ -111,7 +111,7 @@ class _OTPViewState extends State<OTPView> {
                       },
                       beforeTextPaste: (text) {
                         if (kDebugMode) {
-                          print("Allowing to paste $text");
+                         
                         }
                         return true;
                       },

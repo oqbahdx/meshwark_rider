@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../app/constants.dart';
 import '../../../data/network/dio_helper.dart';
 import '../../../domain/trip_history_model.dart';
@@ -46,14 +46,21 @@ class TripHistoryCubit extends Cubit<TripHistoryState> {
       toastDuration: const Duration(seconds: 4),
     );
   }
+    Future<bool> hasInternetAccess() async {
+    try {
+      final result = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 3));
+      return result.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
 
 TripModel? tripModel;
 List<TripModel>? trips;
 
 void getTripHistory() async {
-  List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult.contains(ConnectivityResult.mobile) ||
-      connectivityResult.contains(ConnectivityResult.wifi)) {
+final connected = await hasInternetAccess();
+  if (connected) {
     emit(TripHistoryLoadingState());
     try {
       final response = await DioHelper.getData(
@@ -67,7 +74,7 @@ void getTripHistory() async {
           emit(TripHistoryErrorState('Unexpected response format'));
         }
         if (kDebugMode) {
-          print("console : $response");
+         
         }
       } else {
         emit(TripHistoryErrorState('Failed to load trip history'));
@@ -75,7 +82,7 @@ void getTripHistory() async {
     } catch (error) {
       emit(TripHistoryErrorState(error.toString()));
       if (kDebugMode) {
-        print(error.toString());
+       
       }
     }
   } else {

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meshwark_rider/domain/register_model.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../app/app_pref.dart';
 import '../../../app/constants.dart';
 import '../../../app/di.dart';
@@ -71,7 +71,14 @@ class RegisterCubit extends Cubit<RegisterState> {
     isSecure = !isSecure;
     emit(ChangePasswordVisibleState());
   }
-
+    Future<bool> hasInternetAccess() async {
+    try {
+      final result = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 3));
+      return result.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
   showNoInternetMessage() {
     Widget toast = Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -108,9 +115,8 @@ class RegisterCubit extends Cubit<RegisterState> {
       required String email,
       required String password,
       required String fcmToken}) async {
-    List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile)  ||
-        connectivityResult.contains(ConnectivityResult.wifi) ) {
+   final connected = await hasInternetAccess();
+    if (connected) {
       emit(RegisterLoadingState());
       DioHelper.postData(endPoint: Constants.registerEndPoint, data: {
         "phoneNumber": number,
@@ -121,13 +127,13 @@ class RegisterCubit extends Cubit<RegisterState> {
       }).then((value) {
         emit(RegisterSuccessState());
         if (kDebugMode) {
-          print(value.toString());
+        
           registerModel = RegisterModel.fromJson(value?.data);
         }
       }).catchError((error) {
         emit(RegisterErrorState(error.toString()));
         if (kDebugMode) {
-          print(error.toString());
+         
         }
       });
     } else {

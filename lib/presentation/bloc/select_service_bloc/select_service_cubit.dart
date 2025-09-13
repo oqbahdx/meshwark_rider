@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:meshwark_rider/app/app_pref.dart';
 import 'dart:io';
 import '../../../app/constants.dart';
@@ -54,6 +55,15 @@ class SelectServiceCubit extends Cubit<SelectServiceState> {
       toastDuration: const Duration(seconds: 4),
     );
   }
+
+    Future<bool> hasInternetAccess() async {
+    try {
+      final result = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 3));
+      return result.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
   showWarringMessage({required String message, required BuildContext context}) {
     fToast.init(context);
     Widget toast = Container(
@@ -77,18 +87,15 @@ class SelectServiceCubit extends Cubit<SelectServiceState> {
   }
   UserModel? userModel;
   void getUserData() async {
-    List<ConnectivityResult> connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
+  final connected = await hasInternetAccess();
+    if (connected) {
       DioHelper.init();
       emit(GetUserLoadingState());
       DioHelper.getData(
               endPoint: "${Constants.getUserEndPoint}/${Constants.id}")
           .then((value) {
         userModel = UserModel.fromJson(value?.data);
-        print("is hasProfile : ${userModel?.data?.hasProfile}");
-        print("total trips : ${userModel?.data?.totalTrips}");
-
+      
         // _appPreferences.setUserId(key: 'userId', value: userModel?.id ?? "");
         _appPreferences.setFirstName(
             key: 'firstName', value: userModel?.data?.firstName ?? "");
@@ -96,7 +103,7 @@ class SelectServiceCubit extends Cubit<SelectServiceState> {
             key: 'lastName', value: userModel?.data?.lastName ?? "");
         _appPreferences.setPhoneNumber(key: 'phoneNumber', value: userModel?.data?.phoneNumber ?? "");
         if (kDebugMode) {
-          print(userModel?.data?.firstName);
+         
         }
        _appPreferences.getFirstName(key: "firstName").then((value){
          Constants.firstName = value!;
@@ -109,13 +116,12 @@ class SelectServiceCubit extends Cubit<SelectServiceState> {
           Constants.phoneNumber = value!;
         });
         if (kDebugMode) {
-          print(userModel?.data?.lastName);
-          print("personal image : ${userModel?.data?.personalImagePath} ");
+         
         }
         emit(GetUserSuccessState());
       }).catchError((error) {
         if (kDebugMode) {
-          print(error.toString());
+         
         }
         emit(GetUserErrorState(error.toString()));
       });

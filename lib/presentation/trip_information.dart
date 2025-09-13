@@ -92,7 +92,7 @@ class _TripInformationState extends State<TripInformation>
         notificationData = data;
       });
 
-     print(notificationData.toString());
+    
 
       // Show the notification as a SnackBar after dialog closes
       if (notificationData.isNotEmpty) {
@@ -126,7 +126,7 @@ class _TripInformationState extends State<TripInformation>
 
       _startTimer();
     } catch (e) {
-      print('Error calculating distance and time: $e');
+    
     }
   }
 

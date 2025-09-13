@@ -29,22 +29,22 @@ class _DriverResponseAppState extends State<DriverResponseApp> {
         .build();
 
     _hubConnection.onreconnecting(({error}) {
-      print("Reconnecting: ${error.toString()}");
+
       _updateDebugMessage("Reconnecting: ${error.toString()}");
     });
 
     _hubConnection.onreconnected(({connectionId}) {
-      print("Reconnected: $connectionId");
+     
       _updateDebugMessage("Reconnected: $connectionId");
     });
 
     _hubConnection.on("ReceiveDriverResponse", (List<dynamic>? response) {
-      print("Raw response received: $response");
+      
       _updateDebugMessage("Raw response received: $response");
 
       if (response != null && response.isNotEmpty) {
         bool accepted = response[0] as bool;
-        print("Driver response received: $accepted");
+        
         _updateDebugMessage("Driver response received: $accepted");
 
         setState(() {
@@ -53,25 +53,25 @@ class _DriverResponseAppState extends State<DriverResponseApp> {
               : "Driver has declined your request.";
         });
       } else {
-        print("Invalid response received");
+        
         _updateDebugMessage("Invalid response received");
       }
     });
 
     try {
       await _hubConnection.start();
-      print("SignalR connected successfully");
+      
       _updateDebugMessage("SignalR connected successfully");
 
       await _hubConnection.invoke("IdentifyRider", args: [_riderId]);
-      print("Rider identified successfully");
+      
       _updateDebugMessage("Rider identified successfully");
 
       setState(() {
         _isConnected = true;
       });
     } catch (e) {
-      print("Error starting SignalR connection or identifying rider: $e");
+      
       _updateDebugMessage("Error: $e");
     }
   }

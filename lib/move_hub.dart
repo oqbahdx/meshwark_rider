@@ -76,7 +76,7 @@ class _UserListScreenState extends State<UserListScreen> {
         _streamController.add(_users);
         _updateMarkers();
       });
-      print("driver id: ${updatedDriver.id}");
+     
     }
   }
 

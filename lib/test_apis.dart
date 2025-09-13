@@ -23,13 +23,11 @@ class TestApi extends StatelessWidget {
             "rider_id":2,
           }).then((value){
             if (kDebugMode) {
-              print("true : ");
-              print(value.toString());
+             
             }
           }).catchError((error){
             if (kDebugMode) {
-              print("false : ");
-              print(error.toString());
+             
             }
           });
         },

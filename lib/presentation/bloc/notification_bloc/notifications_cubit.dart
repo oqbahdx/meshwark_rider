@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../app/constants.dart';
 import '../../../data/network/dio_helper.dart';
 import '../../../domain/notification_model.dart';
@@ -58,16 +58,22 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     //       );
     //     });
   }
-
+  Future<bool> hasInternetAccess() async {
+    try {
+      final result = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 3));
+      return result.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
   NotificationModel? notificationModel;
   List<NotificationModel>? notifications;
 
   Future<void> getNotification() async {
-    List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile)  ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
+    final connected = await hasInternetAccess();
+    if (connected) {
       emit(GetNotificationsLoadingState());
-      print("id from : notifications cubit ${Constants.id}");
+    
       try {
         final response = await DioHelper.getData(
             endPoint: '${Constants.notificationEndPoint}/${Constants.id}');
@@ -83,7 +89,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       } catch (error) {
         emit(GetNotificationsErrorState(error.toString()));
         if (kDebugMode) {
-          print(error.toString());
+         
         }
       }
     } else {
@@ -101,12 +107,12 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         notificationModel = NotificationModel.fromJson(value?.data);
         emit(GetNotificationsSuccessState());
         if (kDebugMode) {
-          print(value.toString());
+         
         }
       }).catchError((error) {
         emit(GetNotificationsErrorState(error.toString()));
         if (kDebugMode) {
-          print(error.toString());
+         
         }
       });
     } else {

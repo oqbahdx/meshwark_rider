@@ -103,7 +103,7 @@ class _MapPageViewState extends State<MapPageView> {
   void _listenForDriverResponse() {
     _driverResponseSubscription = _signalRService.driverResponseStream.listen(
       (accepted) {
-        print('Driver response received in widget: $accepted');
+       
         if (mounted) {
           setState(() {
             if (accepted) {
@@ -115,10 +115,10 @@ class _MapPageViewState extends State<MapPageView> {
         }
       },
       onError: (error) {
-        print('Error receiving driver response: $error');
+      
       },
     );
-    print("Listening for driver response...");
+   
   }
 
   // Change subscription to listen for a list of Data instead of GetAllDriversModel
@@ -131,7 +131,7 @@ class _MapPageViewState extends State<MapPageView> {
         });
       },
       onError: (error) {
-        print('Error in StreamSubscription: $error');
+       
       },
     );
   }
@@ -181,8 +181,7 @@ bool _shouldShowDriver(Data driver) {
       driver.gender == widget.gender &&
       driver.latitude != null &&
       driver.longitude != null;
-  print('Driver ${driver.id}: isValid=$isValid, '
-      'widget.gender=${widget.gender}, driver.gender=${driver.gender}');
+ 
   return isValid;
 }
 
@@ -257,10 +256,9 @@ bool _shouldShowDriver(Data driver) {
                       StreamBuilder<List<Data>>(
                         stream: _signalRService.stream,
                         builder: (context, snapshot) {
-                          print(
-                              'RECEIVED ${snapshot.data?.length ?? 0} DRIVERS IN STREAM');
+                        
                           if (snapshot.hasError)
-                            print('STREAM ERROR: ${snapshot.error}'); 
+                          
                           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               _updateMarkersBatch(snapshot.data!);
@@ -343,7 +341,7 @@ bool _shouldShowDriver(Data driver) {
         ),
       ));
     } else if (status.isDenied) {
-      print('Location permission denied.');
+    
     } else if (status.isPermanentlyDenied) {
       await openAppSettings();
     }
@@ -360,8 +358,7 @@ bool _shouldShowDriver(Data driver) {
         final model = GetAllDriversModel.fromJson(response!.data);
         final drivers = model.data ?? [];
         final filteredDrivers = drivers.where((driver) {
-          print(
-              'Filtering driver ${driver.id}: isOnline=${driver.isOnline}, gender=${driver.gender} vs widget.gender=${widget.gender}');
+         
           return driver.isOnline == true && driver.gender == widget.gender;
         }).toList();
         if (drivers.isNotEmpty) {
@@ -374,13 +371,13 @@ bool _shouldShowDriver(Data driver) {
             _updateMarkersBatch(filteredDrivers);
           }
         } else {
-          print('No driver data received');
+         
         }
       } else {
-        print('Invalid response');
+        
       }
     } catch (error) {
-      print('Failed to fetch initial data: $error');
+      
     }
   }
 

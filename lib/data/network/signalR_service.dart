@@ -98,15 +98,15 @@ class SignalRService {
 void _handleDriverUpdate(List<Object?>? parameters) {
   if (parameters == null) return;
   final updatedDriverJson = parameters[0] as String;
-  print('Received JSON: $updatedDriverJson');
+ 
   try {
     final updatedDriver = Data.fromJson(json.decode(updatedDriverJson));
-    print('Parsed driver: id=${updatedDriver.id}, gender=${updatedDriver.gender}');
+   
     _allDrivers = _allDrivers.where((d) => d.id != updatedDriver.id).toList();
     _allDrivers.add(updatedDriver);
     _streamController.add(List<Data>.from(_allDrivers));
   } catch (e) {
-    print('Error parsing driver JSON: $e');
+   
   }
 }
 

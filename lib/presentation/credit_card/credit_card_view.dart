@@ -32,11 +32,11 @@ class _MoyasserPaymentViewState extends State<MoyasserPaymentView> {
         ),
         onPaymentSucess: (response) {
           //TODO Handle success payment response
-          debugPrint("Success ------> ${response.toMap()}");
+        
         },
         onPaymentFailed: (response) {
           //TODO Handle failed payment response
-          debugPrint("Failed ------> ${response.toMap()}");
+         
         },
       ),
     );

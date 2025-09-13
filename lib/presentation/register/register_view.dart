@@ -36,7 +36,7 @@ class _RegisterViewState extends State<RegisterView> {
     _numberController = TextEditingController();
     _passwordController = TextEditingController();
     _emailController = TextEditingController();
-    print("fcm token from reigster page : $fcmToken");
+    
   }
 
   @override

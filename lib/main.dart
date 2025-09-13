@@ -33,8 +33,7 @@ void fetchDataAndUpdateConstants() async {
       await appPreferences.getFirstName(key: 'firstName') ?? "";
   Constants.lastName = await appPreferences.getLastName(key: 'lastName') ?? "";
   if (kDebugMode) {
-    print("is boarding from main : ${Constants.isBoarding}");
-    print("user id from main : ${Constants.id}");
+   
   }
 }
 
@@ -78,7 +77,7 @@ void main() async {
   ]);
 
   if (kDebugMode) {
-    print("user id =  : ${Constants.id}");
+   
   }
 
   runApp(ScreenUtilInit(

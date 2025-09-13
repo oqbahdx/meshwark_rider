@@ -85,13 +85,13 @@ class MapCubit extends Cubit<MapState> {
   void onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) {
     if (kDebugMode) {
-      print("id : $id");
+   
     }
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     if (kDebugMode) {
-      print("$details");
+    
     }
   }
 
@@ -103,10 +103,10 @@ class MapCubit extends Cubit<MapState> {
       "reason": reason,
       "cancellingParty": "Rider"
     }).then((value) {
-      debugPrint(value.toString());
+    
       emit(CancelTripSuccessState());
     }).catchError((err) {
-      debugPrint(err.toString());
+     
       emit(CancelTripErrorState(err.toString()));
     });
   }
@@ -376,7 +376,7 @@ class MapCubit extends Cubit<MapState> {
                                   latitude: currentLatLng?.latitude ?? 0.0,
                                   longitude: currentLatLng?.longitude ?? 0.0);
                               Navigator.of(context).pop();
-                              print('Booking confirmed: $price, $passengers');
+                            
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -426,7 +426,7 @@ class MapCubit extends Cubit<MapState> {
           ?.buffer
           .asUint8List();
     } catch (e) {
-      print("Error loading marker icon: $e");
+     
       return null;
     }
   }
@@ -524,7 +524,7 @@ class MapCubit extends Cubit<MapState> {
       "title": title,
       "body": body,
     }).then((value) {}).catchError((error) {
-      print(error.toString());
+     
     });
   }
 
@@ -550,9 +550,9 @@ class MapCubit extends Cubit<MapState> {
           "latitude": latitude,
           "longitude": longitude,
         }).then((value) {
-      print(value.toString());
+     
     }).catchError((e) {
-      print(e.toString());
+     
     });
   }
 

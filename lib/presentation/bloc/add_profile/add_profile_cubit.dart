@@ -12,7 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meshwark_rider/app/app_pref.dart';
 import 'package:meshwark_rider/app/di.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../app/constants.dart';
 import '../../../data/network/dio_helper.dart';
 import '../../resources/Strings_manager.dart';
@@ -47,15 +47,21 @@ class AddProfileCubit extends Cubit<AddProfileState> {
     isMan = value;
     emit(ChangeGenderState());
   }
-
+    Future<bool> hasInternetAccess() async {
+    try {
+      final result = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 3));
+      return result.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
   Future<void> addProfile({
     required String firstName,
     required String lastName,
     required String gender,
   }) async {
-    List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult.contains(ConnectivityResult.mobile)  ||
-        connectivityResult.contains(ConnectivityResult.wifi) ) {
+    final connected = await hasInternetAccess();
+    if (connected) {
       DioHelper.init();
       emit(AddProfileLoadingState());
 

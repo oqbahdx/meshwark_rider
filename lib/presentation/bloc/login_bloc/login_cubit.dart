@@ -9,6 +9,7 @@ import '../../../app/app_pref.dart';
 import '../../../app/constants.dart';
 import '../../../app/di.dart';
 import '../../../data/network/dio_helper.dart';
+import '../../../app/secure_token_storage.dart';
 import '../../../domain/login_model.dart';
 import '../../../domain/model/login_response_model.dart';
 import '../../resources/Strings_manager.dart';
@@ -88,31 +89,30 @@ class LoginCubit extends Cubit<LoginState> {
     if (connectivityResult.contains(ConnectivityResult.mobile) ||
         connectivityResult.contains(ConnectivityResult.wifi)) {
       emit(LoginLoadingState());
-      DioHelper.postData(endPoint: Constants.loginEndPoint, data: {
-        "phoneNumber": phone,
-        "password": password,
-      }).then((value) {
+      try {
+        final value = await DioHelper.postData(endPoint: Constants.loginEndPoint, data: {
+          "phoneNumber": phone,
+          "password": password,
+        });
         loginModel = LoginModel.fromJson(value?.data);
-        _appPreferences.setToken(key: "token", value: loginModel?.data?.token ?? "");
-        _appPreferences.getToken(key: "token").then((value) {
-          Constants.token = value!;
-        });
-        print("token from login cubit ${Constants.token}");
-        _appPreferences.setUserId(key: "userId", value: loginModel?.data?.id ?? "");
-        _appPreferences.getUserId(key: "userId").then((value) {
-          Constants.id = value!;
-        });
+        final String token = loginModel?.data?.token ?? "";
+        await SecureTokenStorage.saveToken(token);
+        await _appPreferences.setUserId(key: "userId", value: loginModel?.data?.id ?? "");
+        final String? userId = await _appPreferences.getUserId(key: "userId");
+        if (userId != null) {
+          Constants.id = userId;
+        }
         emit(LoginSuccessState());
         if (kDebugMode) {
           print("id : ${loginModel?.data?.id}");
           print("user id from constants : ${Constants.id}");
         }
-      }).catchError((error) {
+      } catch (error) {
         emit(LoginErrorState(error.toString()));
         if (kDebugMode) {
           print(error);
         }
-      });
+      }
     } else {
       showNoInternetMessage();
     }

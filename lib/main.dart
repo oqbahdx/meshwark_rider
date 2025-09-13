@@ -1,6 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -43,29 +40,12 @@ void fetchDataAndUpdateConstants() async {
 
 String? fcmToken;
 
-Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('Handling a background message: ${message.messageId}');
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
-  // Firebase Messaging setup
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  try {
-    fcmToken = await messaging.getToken();
-    print("fcm token: $fcmToken");
-  } catch (e) {
-    print("Failed to retrieve FCM token: $e");
-  }
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Initialize app module
   await initAppModule();

@@ -44,7 +44,7 @@ class _LoginViewState extends State<LoginView> {
       Constants.isBoarding = value ?? 0;
     });
     if (kDebugMode) {
-      print("is boarding from app : ${Constants.isBoarding}");
+    
     }
   }
 

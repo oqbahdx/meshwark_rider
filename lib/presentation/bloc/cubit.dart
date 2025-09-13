@@ -42,7 +42,7 @@ class AppCubit extends Cubit<AppStates> {
       emit(UploadProfileImageState());
     }
     if (kDebugMode) {
-      print(image?.path.split('/').last);
+    
     }
     emit(UploadProfileImageState());
   }
@@ -56,7 +56,7 @@ class AppCubit extends Cubit<AppStates> {
 
   void codeSent(String verificationId, int? resendToken) {
     if (kDebugMode) {
-      print("code sent");
+   
     }
     this.verificationId = verificationId;
     emit(OtpSuccessState());
@@ -64,7 +64,7 @@ class AppCubit extends Cubit<AppStates> {
 
   void codeAutoRetrievalTimeout(String verificationId) {
     if (kDebugMode) {
-      print("code Auto Retrieval Timeout");
+     
     }
   }
 
@@ -87,24 +87,24 @@ class AppCubit extends Cubit<AppStates> {
         });
         Timer(const Duration(milliseconds: 700), () {
           if (kDebugMode) {
-            print("id from api : ${userModel?.data?.id}");
+           
           }
           if (kDebugMode) {
-            print("id from app pref : ${Constants.id}");
+           
           }
         });
 
         if (kDebugMode) {
-          print(userModel?.data?.firstName);
+         
         }
         if (kDebugMode) {}
         if (kDebugMode) {
-          print(userModel?.data?.lastName);
+         
         }
         emit(GetCurrentUserSuccessState());
       }).catchError((error) {
         if (kDebugMode) {
-          print(error.toString());
+         
         }
         emit(GetCurrentUserErrorState(error.toString()));
       });
@@ -202,12 +202,12 @@ class AppCubit extends Cubit<AppStates> {
         // newList = notificationModel?.data?.notifications?.length as List;
         emit(GetNotificationSuccessState());
         if (kDebugMode) {
-          print(value.toString());
+        
         }
       }).catchError((error) {
         emit(GetNotificationErrorState(error.toString()));
         if (kDebugMode) {
-          print(error.toString());
+         
         }
       });
     } else {
@@ -224,12 +224,12 @@ class AppCubit extends Cubit<AppStates> {
         notificationModel = NotificationModel.fromJson(value?.data);
         emit(GetNotificationSuccessState());
         if (kDebugMode) {
-          print(value.toString());
+        
         }
       }).catchError((error) {
         emit(GetNotificationErrorState(error.toString()));
         if (kDebugMode) {
-          print(error.toString());
+         
         }
       });
     } else {
@@ -295,13 +295,13 @@ class AppCubit extends Cubit<AppStates> {
   void onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) {
     if (kDebugMode) {
-      print("id : $id");
+    
     }
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse details) {
     if (kDebugMode) {
-      print("$details");
+     
     }
   }
 
@@ -352,11 +352,11 @@ class AppCubit extends Cubit<AppStates> {
       placeSuggestionModel =
           PlaceSuggestionModel.fromJson(value?.data['predictions']);
       if (kDebugMode) {
-        print(value?.data.toString());
+       
       }
     }).catchError((error) {
       if (kDebugMode) {
-        print(error.toString());
+       
       }
     });
     return [];

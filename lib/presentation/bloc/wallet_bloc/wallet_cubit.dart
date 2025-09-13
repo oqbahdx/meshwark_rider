@@ -10,7 +10,7 @@ class WalletCubit extends Cubit<WalletState> {
   String secretKey = "sk_sbox_bagh7iuewbqbe4yccyav3rnkmie";
   initPayment() async {
 
-    print("payment init");
+  
   }
   Future<void> generateToken(
       {required String number,
@@ -27,7 +27,7 @@ class WalletCubit extends Cubit<WalletState> {
       }
     } catch (ex) {
       emit(AddWalletErrorState(ex.toString()));
-      print("error : $ex");
+     
     }
   }
 }

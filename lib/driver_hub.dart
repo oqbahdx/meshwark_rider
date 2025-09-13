@@ -69,7 +69,7 @@ class _DriverAppState extends State<DriverApp> {
         });
       }
     } catch (e) {
-      print('Error loading initial drivers: $e');
+      
     }
   }
 
@@ -81,26 +81,26 @@ class _DriverAppState extends State<DriverApp> {
         .build();
 
     _hubConnection.on('ReceiveDriverInformationUpdate', (arguments) {
-      print('Received real-time update from SignalR');
+     
       if (arguments != null && arguments.isNotEmpty) {
         // Assume that SignalR sends a flat JSON representing a single driver's updated data.
         final userJson = arguments[0] as String;
-        print('Driver update JSON: $userJson');
+      
 
         try {
           final updatedDriver = Data.fromJson(json.decode(userJson));
           _updateDriverMarker(updatedDriver);
         } catch (e) {
-          print('Error parsing driver update: $e');
+         
         }
       }
     });
 
     try {
       await _hubConnection.start();
-      print('SignalR connection started');
+     
     } catch (e) {
-      print('Error starting SignalR connection: $e');
+      
     }
   }
 
@@ -108,7 +108,7 @@ class _DriverAppState extends State<DriverApp> {
   void _updateDriverMarker(Data updatedDriver) {
     // Validate latitude and longitude.
     if (updatedDriver.latitude == null || updatedDriver.longitude == null) {
-      print('Driver location is invalid');
+      
       return;
     }
 
@@ -129,7 +129,7 @@ class _DriverAppState extends State<DriverApp> {
     );
 
     setState(() {
-      print('Adding marker at: ${updatedDriver.latitude}, ${updatedDriver.longitude}');
+      
       _markers.add(newMarker);
     });
 
@@ -158,7 +158,7 @@ class _DriverAppState extends State<DriverApp> {
         markers: _markers,
         onMapCreated: (controller) {
           _mapController = controller;
-          print('Google Map initialized');
+          
         },
       ),
     );
@@ -183,9 +183,9 @@ class SignalRService {
 
     try {
       await hubConnection.start();
-      print('SignalR connection started');
+      
     } catch (e) {
-      print('Error starting SignalR connection: $e');
+      
     }
   }
 

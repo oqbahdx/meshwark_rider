@@ -15,7 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:meshwark_rider/app/app_pref.dart';
 import 'package:meshwark_rider/domain/update_model.dart';
 import 'package:meshwark_rider/presentation/bloc/states.dart';
-
+import 'package:http/http.dart' as http;
 import '../../../app/constants.dart';
 import '../../../app/di.dart';
 import '../../../data/network/dio_helper.dart';
@@ -33,6 +33,15 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
   FToast fToast = FToast();
   final AppPreferences appPreferences = instance<AppPreferences>();
+
+    Future<bool> hasInternetAccess() async {
+    try {
+      final result = await http.get(Uri.parse('https://www.google.com')).timeout(const Duration(seconds: 3));
+      return result.statusCode == 200;
+    } catch (_) {
+      return false;
+    }
+  }
   getAlertDialog(
       {required Function() onTapCam,
       required Function() onTapGal,
@@ -173,7 +182,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileUploadImageState());
     }
     if (kDebugMode) {
-      print(image?.path.split('/').last);
+     
     }
     emit(ProfileUploadImageState());
   }
@@ -186,12 +195,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   UserModel? userModel;
   void updateProfileWithImage(
       {required String firstName, required String lastName}) async {
-    List<ConnectivityResult> connectivityResult =
-    await Connectivity().checkConnectivity();
+    final connected = await hasInternetAccess();
 
     // Ensure it's either mobile or wifi connection
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
+    if (connected) {
       emit(ProfileUpdateLoadingState());
       var data = FormData.fromMap({
         "personalImage": MultipartFile.fromFileSync(image!.path,
@@ -205,7 +212,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           .then((value) {
         if (kDebugMode) {
           // userModel = GetUserModel.fromJson(value!.data);
-          print(value.toString());
+        
           appPreferences.setFirstName(
               key: 'firstName', value: userModel?.data?.firstName ?? "");
           // _appPreferences.setMiddleName(key: 'middleName', value: userModel?.middleName ?? "");
@@ -221,12 +228,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void updateProfile(
       {required String firstName, required String lastName}) async {
-    List<ConnectivityResult> connectivityResult =
-    await Connectivity().checkConnectivity();
+    final connected = await hasInternetAccess();
 
     // Ensure it's either mobile or wifi connection
-    if (connectivityResult.contains(ConnectivityResult.mobile) ||
-        connectivityResult.contains(ConnectivityResult.wifi)) {
+    if (connected) {
       emit(ProfileUpdateLoadingState());
       var data = FormData.fromMap({
         "firstName": firstName,
@@ -238,7 +243,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           .then((value) {
         if (kDebugMode) {
           // userModel = GetUserModel.fromJson(value!.data);
-          print(value.toString());
+         
           appPreferences.setFirstName(
               key: 'firstName', value: userModel?.data?.firstName ?? "");
           // _appPreferences.setMiddleName(key: 'middleName', value: userModel?.middleName ?? "");

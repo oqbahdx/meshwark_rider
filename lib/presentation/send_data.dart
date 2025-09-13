@@ -42,9 +42,9 @@ class SignalRService {
 
     try {
       await hubConnection.start();
-      print('SignalR connection started');
+     
     } catch (e) {
-      print('Error starting SignalR connection: $e');
+     
     }
   }
 

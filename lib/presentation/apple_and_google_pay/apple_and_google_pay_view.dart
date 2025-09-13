@@ -30,7 +30,7 @@ class _AppleAndGooglePayViewState extends State<AppleAndGooglePayView> {
   }
 
   void onPaymentResult(paymentResult) {
-    debugPrint(paymentResult.toString());
+ 
   }
 
   @override

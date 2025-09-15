@@ -27,3 +27,5 @@ class CancelTripErrorState extends MapState {
   final String error;
   CancelTripErrorState(this.error);
 }
+
+class LocationPermissionDeniedState extends MapState {}

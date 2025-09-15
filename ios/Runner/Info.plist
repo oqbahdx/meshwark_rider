@@ -9,15 +9,16 @@
         <true/>
     </dict>
 
-    <!-- Location Permissions -->
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need your location to show your current position on the map and for navigation.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>We need access to your location even in the background to improve your experience.</string>
+  <!-- Location Permissions -->
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location to show your current position on the map and for navigation.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need access to your location even in the background to improve your experience.</string>
 
-    <!-- Camera Permission -->
-    <key>NSCameraUsageDescription</key>
-    <string>We need access to your camera to allow you to take photos.</string>
+<!-- Camera Permission -->
+<key>NSCameraUsageDescription</key>
+<string>We need access to your camera to allow you to take photos.</string>
+
 
     <!-- Photo Library (Storage) Permissions -->
     <key>NSPhotoLibraryUsageDescription</key>

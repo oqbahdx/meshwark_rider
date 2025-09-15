@@ -432,7 +432,10 @@ class MapCubit extends Cubit<MapState> {
   }
 
   Future<void> takeMeToMyLocation() async {
-    if (await Permission.location.request().isGranted) {
+    // Request location permission - this will show native iOS popup
+    final status = await Permission.location.request();
+    
+    if (status.isGranted) {
       Position position = await Geolocator.getCurrentPosition();
       final GoogleMapController controller = await _controller.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(
@@ -440,8 +443,24 @@ class MapCubit extends Cubit<MapState> {
             zoom: 11,
             target: LatLng(position.latitude, position.longitude)),
       ));
-    } else {
-      await Permission.location.request();
+    } else if (status.isDenied) {
+      // If denied, request again to show native iOS popup
+      final retryStatus = await Permission.location.request();
+      if (retryStatus.isGranted) {
+        Position position = await Geolocator.getCurrentPosition();
+        final GoogleMapController controller = await _controller.future;
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+              zoom: 11,
+              target: LatLng(position.latitude, position.longitude)),
+        ));
+      } else {
+        // If still denied after retry, emit state for custom dialog
+        emit(LocationPermissionDeniedState());
+      }
+    } else if (status.isPermanentlyDenied) {
+      // If permanently denied, emit state for custom dialog
+      emit(LocationPermissionDeniedState());
     }
   }
 

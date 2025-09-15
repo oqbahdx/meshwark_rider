@@ -23,6 +23,7 @@ import '../bloc/map_bloc/map_cubit.dart';
 import '../resources/assets_manager.dart';
 import '../resources/color_manager.dart';
 import '../resources/language_manager.dart';
+import '../resources/style_manager.dart';
 import '../resources/value_manager.dart';
 import '../trip_information.dart';
 
@@ -239,7 +240,11 @@ bool _shouldShowDriver(Data driver) {
         ),
       ),
       body: BlocConsumer<MapCubit, MapState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is LocationPermissionDeniedState) {
+            _showLocationPermissionDialog();
+          }
+        },
         builder: (context, state) {
           return SafeArea(
             child: cubit.currentLatLng == null &&
@@ -330,7 +335,9 @@ bool _shouldShowDriver(Data driver) {
   }
 
   Future<void> takeMeToMyLocation() async {
+    // Request location permission - this will show native iOS popup
     var status = await Permission.location.request();
+    
     if (status.isGranted) {
       Position position = await Geolocator.getCurrentPosition();
       final GoogleMapController controller = await _controller.future;
@@ -341,10 +348,79 @@ bool _shouldShowDriver(Data driver) {
         ),
       ));
     } else if (status.isDenied) {
-    
+      // If denied, request again to show native iOS popup
+      final retryStatus = await Permission.location.request();
+      if (retryStatus.isGranted) {
+        Position position = await Geolocator.getCurrentPosition();
+        final GoogleMapController controller = await _controller.future;
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            zoom: 16,
+            target: LatLng(position.latitude, position.longitude),
+          ),
+        ));
+      } else {
+        // If still denied after retry, show custom dialog to guide to settings
+        await _showLocationPermissionDialog();
+      }
     } else if (status.isPermanentlyDenied) {
-      await openAppSettings();
+      // If permanently denied, show custom dialog to guide to settings
+      await _showLocationPermissionDialog();
     }
+  }
+
+  Future<void> _showLocationPermissionDialog() async {
+    if (!mounted) return;
+    
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Location Permission Required',
+            style: getBoldStyle(
+              color: ColorManager.black,
+              fontSize: FontSize.s18,
+            ),
+          ),
+          content: Text(
+            'This app needs access to your location to show your current position on the map and provide navigation services. Please enable location permission in Settings.',
+            style: getRegularStyle(
+              color: ColorManager.black,
+              fontSize: FontSize.s14,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancel',
+                style: getSemiBoldStyle(
+                  color: ColorManager.grey,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                openAppSettings();
+              },
+              child: Text(
+                'Open Settings',
+                style: getSemiBoldStyle(
+                  color: ColorManager.primary,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Updated fetchInitialData to parse the entire response into GetAllDriversModel and then extract its data list.

@@ -30,13 +30,12 @@ class _SelectGenderViewState extends State<SelectGenderView>
   @override
   void initState() {
     super.initState();
-
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _animation =
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
+    _animation = CurvedAnimation(
+        parent: _animationController, curve: Curves.easeInOut);
     _animationController.forward();
   }
 
@@ -63,7 +62,10 @@ class _SelectGenderViewState extends State<SelectGenderView>
             elevation: 0,
             title: Text(
               AppStrings.selectGender.tr(),
-              style: getBoldStyle(color: ColorManager.primary, fontSize: 22.sp),
+              style: getBoldStyle(
+                color: ColorManager.primary,
+                fontSize: 22.sp,
+              ),
             ),
           ),
           body: SafeArea(
@@ -122,7 +124,11 @@ class _SelectGenderViewState extends State<SelectGenderView>
   }
 
   Widget _buildGenderCard(
-      SelectGenderCubit cubit, String gender, String imagePath, Color color) {
+    SelectGenderCubit cubit,
+    String gender,
+    String imagePath,
+    Color color,
+  ) {
     bool isActive =
         gender == AppStrings.woman ? cubit.womanIsActive : cubit.manIsActive;
     return GestureDetector(
@@ -187,30 +193,41 @@ class _SelectGenderViewState extends State<SelectGenderView>
         child: Text(
           AppStrings.next.tr(),
           style: getBoldStyle(
-              color: ColorManager.white, fontSize: FontSize.s16.sp),
+            color: ColorManager.white,
+            fontSize: FontSize.s16.sp,
+          ),
         ),
       ),
     );
   }
 
-  Future<void> _onNextPressed(SelectGenderCubit cubit) async {
-    final status = await Permission.locationWhenInUse.request();
+Future<void> _onNextPressed(SelectGenderCubit cubit) async {
+  final status = await Permission.locationWhenInUse.request();
 
-    if (status.isGranted && mounted) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => MapPageView(
-            image: cubit.image,
-            tag: cubit.tag,
-            gender: cubit.gender,
-            typeOfTrip: 'cityToCity',
-          ),
+  debugPrint("Location permission status: $status");
+
+  if (status.isGranted && mounted) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MapPageView(
+          image: cubit.image,
+          tag: cubit.tag,
+          gender: cubit.gender,
+          typeOfTrip: 'cityToCity',
         ),
-      );
-    } else {
+      ),
+    );
+  } else {
+    // Show debug info
+    if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Location permission is required.")),
+        SnackBar(
+          content: Text('Permission status: $status'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
+}
+
 }

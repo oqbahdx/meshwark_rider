@@ -70,10 +70,62 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Location permission is required.")),
-      );
+      await _showLocationPermissionDialog(context);
     }
+  }
+
+  Future<void> _showLocationPermissionDialog(BuildContext context) async {
+    if (!mounted) return;
+    
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Location Permission Required',
+            style: getBoldStyle(
+              color: ColorManager.black,
+              fontSize: FontSize.s18,
+            ),
+          ),
+          content: Text(
+            'This app needs access to your location to show your current position on the map and provide navigation services. Please enable location permission in Settings.',
+            style: getRegularStyle(
+              color: ColorManager.black,
+              fontSize: FontSize.s14,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancel',
+                style: getSemiBoldStyle(
+                  color: ColorManager.grey,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                openAppSettings();
+              },
+              child: Text(
+                'Open Settings',
+                style: getSemiBoldStyle(
+                  color: ColorManager.primary,
+                  fontSize: FontSize.s14,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildImage(String assetName, double width) {

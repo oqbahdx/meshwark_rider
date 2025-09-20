@@ -43,9 +43,6 @@ String? fcmToken;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
-
-
   // Initialize app module
   await initAppModule();
 

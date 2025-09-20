@@ -259,7 +259,7 @@ class AppCubit extends Cubit<AppStates> {
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
-      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+      
     );
     final InitializationSettings settings = InitializationSettings(
       android: androidInitializationSettings,

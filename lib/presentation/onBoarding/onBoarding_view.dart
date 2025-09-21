@@ -22,7 +22,7 @@ import 'dart:io' as io;
 
 final AppPreferences _appPreferences = instance<AppPreferences>();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({super.key});
@@ -35,24 +35,60 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   Future<void> requestNotificationPermission() async {
-    const DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings();
+    try {
+      InitializationSettings initializationSettings;
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(iOS: initializationSettingsDarwin);
+      if (io.Platform.isAndroid) {
+        // ✅ Android-only initialization
+        const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+        initializationSettings = const InitializationSettings(
+          android: initializationSettingsAndroid,
+        );
+      } else if (io.Platform.isIOS) {
+        // ✅ iOS-only initialization
+        const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
-    final bool? result = await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
+        initializationSettings = const InitializationSettings(
+          iOS: initializationSettingsDarwin,
+        );
+      } else {
+        // For other platforms, use minimal settings
+        initializationSettings = const InitializationSettings();
+      }
+
+      // ✅ Initialize plugin with platform-specific settings
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+      if (io.Platform.isIOS) {
+        // iOS: ask explicitly for permissions
+        final bool? result = await flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
+            ?.requestPermissions(
           alert: true,
           badge: true,
           sound: true,
         );
-
-    debugPrint("Notification permission: $result");
+        debugPrint("iOS notification permission: $result");
+      } else if (io.Platform.isAndroid) {
+        // Android 13+ requires runtime permission
+        final status = await Permission.notification.request();
+        if (status.isGranted) {
+          debugPrint("Android notification permission granted ✅");
+        } else {
+          debugPrint("Android notification permission denied ❌");
+        }
+      }
+    } catch (e) {
+      debugPrint("⚠️ Notification init failed: $e");
+    }
   }
 
   Future<void> _onIntroEnd(context) async {
@@ -60,7 +96,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
 
     final status = await Permission.locationWhenInUse.request();
     if (status.isGranted) {
-      // ask for notifications too
+      // ✅ Ask for notification permission after location
       await requestNotificationPermission();
 
       if (mounted) {
@@ -76,7 +112,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
 
   Future<void> _showLocationPermissionDialog(BuildContext context) async {
     if (!mounted) return;
-    
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -136,11 +172,11 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     TextStyle bodyStyle =
-        getSemiBoldStyle(color: ColorManager.black, fontSize: FontSize.s20);
+    getSemiBoldStyle(color: ColorManager.black, fontSize: FontSize.s20);
 
     var pageDecoration = PageDecoration(
       titleTextStyle:
-          getBoldStyle(color: ColorManager.black, fontSize: FontSize.s30),
+      getBoldStyle(color: ColorManager.black, fontSize: FontSize.s30),
       bodyTextStyle: bodyStyle,
       bodyPadding: const EdgeInsets.fromLTRB(
           AppPadding.p16, AppPadding.p0, AppPadding.p16, AppPadding.p16),
@@ -216,7 +252,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
               controlsPadding: kIsWeb
                   ? const EdgeInsets.all(AppPadding.p12)
                   : const EdgeInsets.fromLTRB(
-                      AppPadding.p8, AppPadding.p4, AppPadding.p8, AppPadding.p4),
+                  AppPadding.p8, AppPadding.p4, AppPadding.p8, AppPadding.p4),
               dotsDecorator: const DotsDecorator(
                 size: Size(AppSize.s10, AppSize.s10),
                 color: Color(0xFFBDBDBD),

@@ -22,7 +22,7 @@ import 'dart:io' as io;
 
 final AppPreferences _appPreferences = instance<AppPreferences>();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({super.key});
@@ -39,17 +39,15 @@ class _OnBoardingViewState extends State<OnBoardingView> {
       InitializationSettings initializationSettings;
 
       if (io.Platform.isAndroid) {
-        // ✅ Android-only initialization
         const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+            AndroidInitializationSettings('@mipmap/ic_launcher');
 
         initializationSettings = const InitializationSettings(
           android: initializationSettingsAndroid,
         );
       } else if (io.Platform.isIOS) {
-        // ✅ iOS-only initialization
         const DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
+            DarwinInitializationSettings(
           requestAlertPermission: true,
           requestBadgePermission: true,
           requestSoundPermission: true,
@@ -59,18 +57,15 @@ class _OnBoardingViewState extends State<OnBoardingView> {
           iOS: initializationSettingsDarwin,
         );
       } else {
-        // For other platforms, use minimal settings
         initializationSettings = const InitializationSettings();
       }
 
-      // ✅ Initialize plugin with platform-specific settings
       await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
       if (io.Platform.isIOS) {
-        // iOS: ask explicitly for permissions
         final bool? result = await flutterLocalNotificationsPlugin
             .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
+                IOSFlutterLocalNotificationsPlugin>()
             ?.requestPermissions(
           alert: true,
           badge: true,
@@ -78,7 +73,6 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         );
         debugPrint("iOS notification permission: $result");
       } else if (io.Platform.isAndroid) {
-        // Android 13+ requires runtime permission
         final status = await Permission.notification.request();
         if (status.isGranted) {
           debugPrint("Android notification permission granted ✅");
@@ -91,14 +85,14 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     }
   }
 
-  Future<void> _onIntroEnd(context) async {
+  Future<void> _onIntroEnd(BuildContext context) async {
     _appPreferences.setBoarding(key: 'boarding', value: 1);
 
     final status = await Permission.locationWhenInUse.request();
-    if (status.isGranted) {
-      // ✅ Ask for notification permission after location
-      await requestNotificationPermission();
 
+    if (status.isGranted) {
+      // ✅ Proceed only if location permission granted
+      await requestNotificationPermission();
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -106,62 +100,9 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         );
       }
     } else {
-      await _showLocationPermissionDialog(context);
+      debugPrint("Location permission denied or restricted.");
+      // ❌ Do nothing. No dialog shown.
     }
-  }
-
-  Future<void> _showLocationPermissionDialog(BuildContext context) async {
-    if (!mounted) return;
-
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'Location Permission Required',
-            style: getBoldStyle(
-              color: ColorManager.black,
-              fontSize: FontSize.s18,
-            ),
-          ),
-          content: Text(
-            'This app needs access to your location to show your current position on the map and provide navigation services. Please enable location permission in Settings.',
-            style: getRegularStyle(
-              color: ColorManager.black,
-              fontSize: FontSize.s14,
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Cancel',
-                style: getSemiBoldStyle(
-                  color: ColorManager.grey,
-                  fontSize: FontSize.s14,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                openAppSettings();
-              },
-              child: Text(
-                'Open Settings',
-                style: getSemiBoldStyle(
-                  color: ColorManager.primary,
-                  fontSize: FontSize.s14,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Widget _buildImage(String assetName, double width) {
@@ -172,11 +113,11 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     TextStyle bodyStyle =
-    getSemiBoldStyle(color: ColorManager.black, fontSize: FontSize.s20);
+        getSemiBoldStyle(color: ColorManager.black, fontSize: FontSize.s20);
 
     var pageDecoration = PageDecoration(
       titleTextStyle:
-      getBoldStyle(color: ColorManager.black, fontSize: FontSize.s30),
+          getBoldStyle(color: ColorManager.black, fontSize: FontSize.s30),
       bodyTextStyle: bodyStyle,
       bodyPadding: const EdgeInsets.fromLTRB(
           AppPadding.p16, AppPadding.p0, AppPadding.p16, AppPadding.p16),
@@ -252,7 +193,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
               controlsPadding: kIsWeb
                   ? const EdgeInsets.all(AppPadding.p12)
                   : const EdgeInsets.fromLTRB(
-                  AppPadding.p8, AppPadding.p4, AppPadding.p8, AppPadding.p4),
+                      AppPadding.p8, AppPadding.p4, AppPadding.p8, AppPadding.p4),
               dotsDecorator: const DotsDecorator(
                 size: Size(AppSize.s10, AppSize.s10),
                 color: Color(0xFFBDBDBD),

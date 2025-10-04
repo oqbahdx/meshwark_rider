@@ -114,6 +114,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
+  remove_alpha_ios: true
   image_path: "assets/icons/appLogo.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -188,6 +189,7 @@ flutter:
     - assets/images/truck2_select.png
     - assets/ca/lets-encrypt-r3.pem
     - assets/sounds/requestAlert.wav
+    - assets/icons/appLogo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

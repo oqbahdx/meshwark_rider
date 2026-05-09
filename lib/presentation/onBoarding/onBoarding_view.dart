@@ -93,15 +93,16 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     if (status.isGranted) {
       // ✅ Proceed only if location permission granted
       await requestNotificationPermission();
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginView()),
-        );
-      }
     } else {
       debugPrint("Location permission denied or restricted.");
-      // ❌ Do nothing. No dialog shown.
+    }
+
+    // Navigate to login view regardless of permission status
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginView()),
+      );
     }
   }
 
